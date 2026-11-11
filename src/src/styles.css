@@ -78,10 +78,15 @@ a {
 }
 
 .brand a {
-  font-weight: 700;
-  font-size: 16px;
-  color: var(--fg);
-  text-decoration: none;
+  display: block;
+  padding: 2px 4px 6px;
+}
+
+.brand img {
+  display: block;
+  width: 100%;
+  max-width: 200px;
+  height: auto;
 }
 
 .search {

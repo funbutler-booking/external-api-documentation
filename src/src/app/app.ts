@@ -12,7 +12,12 @@ import { DocsService, NavItem, fileToRoute, routeToFile } from './docs.service';
     <div class="layout" [class.nav-open]="navOpen()">
       <aside class="sidebar">
         <div class="brand">
-          <a routerLink="/" (click)="navOpen.set(false)">{{ docs.siteTitle() }}</a>
+          <a routerLink="/" (click)="navOpen.set(false)" [attr.aria-label]="docs.siteTitle()">
+            <picture>
+              <source srcset="doc_logo_white.png" media="(prefers-color-scheme: dark)" />
+              <img src="doc_logo_dark.png" [alt]="docs.siteTitle()" width="1208" height="351" />
+            </picture>
+          </a>
         </div>
         <input
           class="search"
