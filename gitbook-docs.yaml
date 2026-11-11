@@ -4,3 +4,4 @@ site:
   logo: ./assets/logo.svg
 
   content:
+    - ./README.md
