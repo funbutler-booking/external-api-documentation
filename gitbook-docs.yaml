@@ -1,7 +1,5 @@
-site:
-  title: My API Documentation
-  description: Official API documentation
-  logo: ./assets/logo.svg
+root: ./
 
-  structure:
-    readme: README.md
+structure:
+  readme: README.md
+  summary: SUMMARY.md
