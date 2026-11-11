@@ -33,4 +33,12 @@ npm run build      # -> dist/viewer/browser
 ```
 
 Upload `dist/viewer/browser` to any static host (S3/CloudFront, GitHub Pages, Netlify, Azure Static Web Apps…).
-It uses hash routing and a relative `<base href>`, so it needs no rewrite rules and works from a sub-path.
+It uses path routing (`/endpoints/bookings`, no `/#/`; old `/#/…` links redirect), so the host must serve `index.html` for any
+path that isn't a real file (SPA fallback):
+
+- **S3/CloudFront:** custom error response 403/404 → `/index.html`, status 200.
+- **Netlify:** `public/_redirects` with `/*  /index.html  200`.
+- **Azure Static Web Apps:** `navigationFallback.rewrite: "/index.html"` in `staticwebapp.config.json`.
+- **GitHub Pages:** copy `index.html` to `404.html` after the build.
+
+`<base href>` is `/`. To serve from a sub-path, build with `npm run build -- --base-href /docs/`.

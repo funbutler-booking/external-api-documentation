@@ -3,7 +3,7 @@ import { NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router
 import { toSignal } from '@angular/core/rxjs-interop';
 import { filter, map, startWith } from 'rxjs';
 import { Clipboard } from './clipboard';
-import { DocsService, NavItem } from './docs.service';
+import { DocsService, NavItem, fileToRoute, routeToFile } from './docs.service';
 
 @Component({
   selector: 'app-root',
@@ -12,7 +12,7 @@ import { DocsService, NavItem } from './docs.service';
     <div class="layout" [class.nav-open]="navOpen()">
       <aside class="sidebar">
         <div class="brand">
-          <a routerLink="/README.md" (click)="navOpen.set(false)">{{ docs.siteTitle() }}</a>
+          <a routerLink="/" (click)="navOpen.set(false)">{{ docs.siteTitle() }}</a>
         </div>
         <input
           class="search"
@@ -28,7 +28,7 @@ import { DocsService, NavItem } from './docs.service';
             }
             @for (item of g.items; track item.path) {
               <a
-                [routerLink]="'/' + item.path"
+                [routerLink]="route(item.path)"
                 [class.active]="item.path === activePath()"
                 (click)="navOpen.set(false)"
                 >{{ item.title }}</a
@@ -60,6 +60,7 @@ export class App {
   protected readonly clip = inject(Clipboard);
   private readonly router = inject(Router);
 
+  protected readonly route = fileToRoute;
   readonly query = signal('');
   readonly navOpen = signal(false);
 
@@ -67,7 +68,7 @@ export class App {
     this.router.events.pipe(
       filter((e) => e instanceof NavigationEnd),
       startWith(null),
-      map(() => decodeURIComponent(this.router.url.split(/[?#]/)[0].replace(/^\/+/, '')) || 'README.md'),
+      map(() => routeToFile(this.router.url)),
     ),
     { initialValue: 'README.md' },
   );

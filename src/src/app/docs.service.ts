@@ -103,3 +103,15 @@ export function toPlainMarkdown(md: string): string {
     )
     .replace(/\{%[^%]*%\}\n?/g, '');
 }
+
+/** Doc file -> URL path: "endpoints/bookings.md" -> "/endpoints/bookings", "README.md" -> "/". */
+export function fileToRoute(file: string): string {
+  return '/' + file.replace(/(^|\/)README\.md$/i, '$1').replace(/\.md$/i, '');
+}
+
+/** URL -> doc file, the inverse of fileToRoute. */
+export function routeToFile(url: string): string {
+  const p = decodeURIComponent(url.split(/[?#]/)[0]).replace(/^\/+/, '');
+  if (!p || p.endsWith('/')) return p + 'README.md';
+  return /\.md$/i.test(p) ? p : p + '.md';
+}

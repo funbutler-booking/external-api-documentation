@@ -1,4 +1,5 @@
 import { Marked, Token, Tokens } from 'marked';
+import { fileToRoute } from './docs.service';
 
 export interface Example {
   title: string;
@@ -80,7 +81,7 @@ export function renderPage(md: string, pagePath: string): { title: string; secti
       heading({ tokens, depth }) {
         const text = this.parser.parseInline(tokens);
         const id = slugify(text);
-        return `<h${depth} id="${id}"><a class="anchor" href="#${id}" data-anchor="${id}">#</a>${text}</h${depth}>`;
+        return `<h${depth} id="${id}"><a class="anchor" href="${fileToRoute(pagePath).slice(1)}#${id}" data-anchor="${id}">#</a>${text}</h${depth}>`;
       },
       code({ text, lang }) {
         const { lang: l } = parseInfo(lang);
@@ -102,10 +103,10 @@ export function renderPage(md: string, pagePath: string): { title: string; secti
         const text = this.parser.parseInline(tokens);
         const t = title ? ` title="${escapeHtml(title)}"` : '';
         if (/^[a-z]+:/i.test(href)) return `<a href="${href}"${t} target="_blank" rel="noopener">${text}</a>`;
-        if (href.startsWith('#')) return `<a href="${href}" data-anchor="${href.slice(1)}"${t}>${text}</a>`;
+        if (href.startsWith('#')) return `<a href="${fileToRoute(pagePath).slice(1)}${href}" data-anchor="${href.slice(1)}"${t}>${text}</a>`;
         const [file, hash] = href.split('#');
         const target = resolve(pagePath, file);
-        return `<a href="#/${target}" data-page="${target}"${hash ? ` data-hash="${hash}"` : ''}${t}>${text}</a>`;
+        return `<a href="${fileToRoute(target).slice(1) || './'}${hash ? `#${hash}` : ''}" data-page="${target}"${hash ? ` data-hash="${hash}"` : ''}${t}>${text}</a>`;
       },
     },
   });

@@ -5,7 +5,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { filter, map, startWith } from 'rxjs';
 import { NavigationEnd } from '@angular/router';
 import { Clipboard } from './clipboard';
-import { DocsService, toPlainMarkdown } from './docs.service';
+import { DocsService, fileToRoute, routeToFile, toPlainMarkdown } from './docs.service';
 import { Examples } from './examples';
 import { renderPage } from './markdown';
 
@@ -108,10 +108,7 @@ export class Page {
         { requireSync: true },
     );
 
-    readonly path = computed(() => {
-        const p = decodeURIComponent(this.url().split(/[?#]/)[0].replace(/^\/+/, ''));
-        return p || 'README.md';
-    });
+    readonly path = computed(() => routeToFile(this.url()));
 
     readonly page = resource({
         params: () => this.path(),
@@ -133,7 +130,7 @@ export class Page {
                 const r = this.rendered();
                 if (!r) return;
                 this.title.setTitle(`${r.title} · ${this.docs.siteTitle()}`);
-                const hash = history.state?.anchor as string | undefined;
+                const hash = (history.state?.anchor as string | undefined) || decodeURIComponent(location.hash.slice(1));
                 queueMicrotask(() => {
                     if (hash) this.scrollTo(hash);
                     else window.scrollTo({ top: 0 });
@@ -157,10 +154,11 @@ export class Page {
             if (!a || ev.metaKey || ev.ctrlKey || ev.shiftKey) return;
             if (a.dataset['anchor']) {
                 ev.preventDefault();
+                history.replaceState(history.state, '', '#' + a.dataset['anchor']);
                 this.scrollTo(a.dataset['anchor']);
             } else if (a.dataset['page']) {
                 ev.preventDefault();
-                this.router.navigateByUrl('/' + a.dataset['page'], { state: { anchor: a.dataset['hash'] } });
+                this.router.navigateByUrl(fileToRoute(a.dataset['page']), { state: { anchor: a.dataset['hash'] } });
             }
         }
 
