@@ -6,3 +6,7 @@
 ## Endpoints
 
 * [Bookings](endpoints/bookings.md)
+
+## Webhooks
+
+* [Webhooks](webhooks.md)

@@ -8,3 +8,4 @@ Welcome! This documentation describes how to integrate with the Funbutler bookin
 
 - [Authentication](authentication.md)
 - [Bookings](endpoints/bookings.md)
+- [Webhooks](webhooks.md)
