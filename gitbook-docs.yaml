@@ -13,5 +13,5 @@ site:
           path: docs
           default: true
           content:
-            directory: ./docs/en
+            directory: ./docs
             language: en
