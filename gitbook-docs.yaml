@@ -1,1 +1,6 @@
+site:
+  title: My API Documentation
+  description: Official developer documentation
+  logo: ./assets/logo.svg
 
+  content:
